@@ -5,6 +5,7 @@ pub fn simple_curly_braces<'a>() -> SimpleEnclosedTemplate<'a> {
     enclosed::Parser::simple_curly_braces().pipe(SimpleEnclosedTemplate::new)
 }
 
+#[cfg(feature = "std")]
 #[test]
 fn test_simple_curly_braces() {
     use crate::{enclosed::SimpleQuery, FunctionResponder};
