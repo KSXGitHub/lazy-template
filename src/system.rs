@@ -1,4 +1,4 @@
-use crate::{Parse, Respond, Segment};
+use crate::{Parse, Segment};
 use core::{convert::Infallible, fmt, marker::PhantomData};
 use derive_more::{Display, Error};
 use pipe_trait::Pipe;
@@ -29,36 +29,36 @@ where
     Parser: Parse<'a>,
 {
     #[cfg(feature = "std")]
-    pub fn to_string<SegmentOutput, QueryOutput, QueryError, Responder>(
+    pub fn to_string<SegmentOutput, QueryOutput, QueryError, Respond>(
         &'a self,
         template: &'a str,
-        responder: Responder,
+        respond: Respond,
     ) -> Result<String, TemplateApplicationError<Parser::Error, QueryError, fmt::Error>>
     where
         SegmentOutput: fmt::Display,
-        Parser::Output: Segment<Responder, SegmentOutput, QueryError>,
-        Responder: Respond<Query, QueryOutput, QueryError>,
+        Parser::Output: Segment<Respond, SegmentOutput, QueryError>,
+        Respond: FnMut(Query) -> Result<QueryOutput, QueryError>,
     {
         let mut buf = String::new();
-        self.write_to(&mut buf, template, responder)?;
+        self.write_to(&mut buf, template, respond)?;
         Ok(buf)
     }
 
-    pub fn write_to<Output, SegmentOutput, QueryOutput, QueryError, Responder>(
+    pub fn write_to<Output, SegmentOutput, QueryOutput, QueryError, Respond>(
         &'a self,
         output: &mut Output,
         template: &'a str,
-        responder: Responder,
+        respond: Respond,
     ) -> Result<(), TemplateApplicationError<Parser::Error, QueryError, fmt::Error>>
     where
         Output: fmt::Write,
         SegmentOutput: fmt::Display,
-        Parser::Output: Segment<Responder, SegmentOutput, QueryError>,
-        Responder: Respond<Query, QueryOutput, QueryError>,
+        Parser::Output: Segment<Respond, SegmentOutput, QueryError>,
+        Respond: FnMut(Query) -> Result<QueryOutput, QueryError>,
     {
         let mut write_error = None;
 
-        self.apply_template(template, responder, |response| {
+        self.apply_template(template, respond, |response| {
             write_error = write!(output, "{response}").err()
         })
         .map_err(|error| match error {
@@ -74,16 +74,16 @@ where
         Ok(())
     }
 
-    fn apply_template<HandleSegmentOutput, SegmentOutput, QueryOutput, QueryError, Responder>(
+    fn apply_template<HandleSegmentOutput, SegmentOutput, QueryOutput, QueryError, Respond>(
         &'a self,
         template: &'a str,
-        mut responder: Responder,
+        mut respond: Respond,
         mut handle_query_output: HandleSegmentOutput,
     ) -> Result<(), TemplateApplicationError<Parser::Error, QueryError, Infallible>>
     where
         HandleSegmentOutput: FnMut(SegmentOutput),
-        Parser::Output: Segment<Responder, SegmentOutput, QueryError>,
-        Responder: Respond<Query, QueryOutput, QueryError>,
+        Parser::Output: Segment<Respond, SegmentOutput, QueryError>,
+        Respond: FnMut(Query) -> Result<QueryOutput, QueryError>,
     {
         if template.is_empty() {
             return Ok(());
@@ -95,10 +95,10 @@ where
             .map_err(TemplateApplicationError::Parse)?;
 
         let () = segment
-            .query(&mut responder)
+            .query(&mut respond)
             .map_err(TemplateApplicationError::Query)?
             .pipe(&mut handle_query_output);
 
-        self.apply_template(rest, responder, handle_query_output)
+        self.apply_template(rest, respond, handle_query_output)
     }
 }

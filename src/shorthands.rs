@@ -8,17 +8,13 @@ pub fn simple_curly_braces<'a>() -> SimpleEnclosedTemplate<'a> {
 #[cfg(feature = "std")]
 #[test]
 fn test_simple_curly_braces() {
-    use crate::{enclosed::SimpleQuery, FunctionResponder};
     use pretty_assertions::assert_eq;
     let actual = simple_curly_braces()
-        .to_string(
-            "foo = {FOO}; bar = {BAR}",
-            FunctionResponder(|query: SimpleQuery| match query.as_str() {
-                "FOO" => Ok(123),
-                "BAR" => Ok(456),
-                _ => Err(()),
-            }),
-        )
+        .to_string("foo = {FOO}; bar = {BAR}", |query| match query.as_str() {
+            "FOO" => Ok(123),
+            "BAR" => Ok(456),
+            _ => Err(()),
+        })
         .unwrap();
     let expected = "foo = 123; bar = 456";
     assert_eq!(actual, expected);

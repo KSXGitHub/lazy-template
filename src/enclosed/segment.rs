@@ -1,4 +1,3 @@
-use crate::Respond;
 use derive_more::Display;
 use pipe_trait::Pipe;
 
@@ -14,17 +13,15 @@ pub enum SegmentOutput<Output> {
     ExpressionResult(Output),
 }
 
-impl<Responder, Output, Error, Query> crate::Segment<Responder, SegmentOutput<Output>, Error>
+impl<Respond, Output, Error, Query> crate::Segment<Respond, SegmentOutput<Output>, Error>
     for Segment<Query>
 where
-    Responder: Respond<Query, Output, Error>,
+    Respond: FnMut(Query) -> Result<Output, Error>,
 {
-    fn query(self, responder: &mut Responder) -> Result<SegmentOutput<Output>, Error> {
+    fn query(self, respond: &mut Respond) -> Result<SegmentOutput<Output>, Error> {
         Ok(match self {
             Segment::Character(value) => SegmentOutput::Character(value),
-            Segment::Expression(query) => responder
-                .respond(query)?
-                .pipe(SegmentOutput::ExpressionResult),
+            Segment::Expression(query) => respond(query)?.pipe(SegmentOutput::ExpressionResult),
         })
     }
 }
