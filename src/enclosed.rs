@@ -2,7 +2,7 @@ pub mod simple_query;
 pub use simple_query::{SimpleQuery, SimpleQueryParser};
 
 pub mod simple_escape;
-pub use simple_escape::SimpleEscapeParser;
+pub use simple_escape::{SimpleEscape, SimpleEscapeParser};
 
 pub mod simple_template;
 pub use simple_template::SimpleEnclosedTemplate;

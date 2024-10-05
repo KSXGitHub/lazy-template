@@ -9,7 +9,8 @@ pub type ParserInput<'a> = ComponentParserInput<'a>;
 pub struct SimpleEscapeParser;
 pub type Parser = SimpleEscapeParser;
 
-pub type ParseOutput = char;
+pub type SimpleEscape = char;
+pub type ParseOutput = SimpleEscape;
 
 #[derive(Debug, Display, Error, Clone, Copy)]
 pub enum ParseError {
