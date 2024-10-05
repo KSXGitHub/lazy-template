@@ -1,5 +1,5 @@
 use super::{ComponentParserInput, ParserConfig, Segment};
-use crate::{Parse, ParseComponentError};
+use crate::{IntoSkipOrFatal, Parse};
 use derive_more::{Display, Error};
 use split_first_char::split_first_char;
 
@@ -77,14 +77,14 @@ impl<'a, EscapeParser, QueryParser> Parse<'a> for Parser<EscapeParser, QueryPars
 where
     EscapeParser: Parse<'a, ComponentParserInput<'a>>,
     EscapeParser::Output: Into<char>,
-    EscapeParser::Error: ParseComponentError,
+    EscapeParser::Error: IntoSkipOrFatal,
     QueryParser: Parse<'a, ComponentParserInput<'a>>,
-    QueryParser::Error: ParseComponentError,
+    QueryParser::Error: IntoSkipOrFatal,
 {
     type Output = Segment<QueryParser::Output>;
     type Error = ParseError<
-        <EscapeParser::Error as ParseComponentError>::Fatal,
-        <QueryParser::Error as ParseComponentError>::Fatal,
+        <EscapeParser::Error as IntoSkipOrFatal>::Fatal,
+        <QueryParser::Error as IntoSkipOrFatal>::Fatal,
     >;
 
     fn parse(&'a self, input: &'a str) -> Result<(Self::Output, &'a str), Self::Error> {
