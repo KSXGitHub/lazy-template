@@ -8,10 +8,7 @@ pub struct SegmentResultIter<'a, Parser> {
 
 impl<'a, Parser> Clone for SegmentResultIter<'a, Parser> {
     fn clone(&self) -> Self {
-        SegmentResultIter {
-            template: self.template,
-            parser: self.parser,
-        }
+        *self
     }
 }
 
@@ -41,5 +38,16 @@ where
 
         self.template = rest;
         Some(Ok(segment))
+    }
+}
+
+impl<'a, Parser> IntoIterator for &'a SegmentResultIter<'a, Parser>
+where
+    Parser: Parse<'a>,
+{
+    type IntoIter = SegmentResultIter<'a, Parser>;
+    type Item = Result<Parser::Output, Parser::Error>;
+    fn into_iter(self) -> Self::IntoIter {
+        *self
     }
 }
