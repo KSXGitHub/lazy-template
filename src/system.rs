@@ -1,4 +1,4 @@
-use crate::{Parse, Segment};
+use crate::{iter::SegmentResultIter, Parse, Segment};
 use core::{convert::Infallible, fmt, marker::PhantomData};
 use derive_more::{Display, Error};
 use pipe_trait::Pipe;
@@ -74,6 +74,10 @@ where
         Ok(())
     }
 
+    pub fn segments(&'a self, template: &'a str) -> SegmentResultIter<'a, Parser> {
+        SegmentResultIter::new(template, &self.parser)
+    }
+
     fn apply_template<HandleSegmentOutput, SegmentOutput, QueryOutput, QueryError, Respond>(
         &'a self,
         template: &'a str,
@@ -85,20 +89,14 @@ where
         Parser::Output: Segment<Respond, SegmentOutput, QueryError>,
         Respond: FnMut(Query) -> Result<QueryOutput, QueryError>,
     {
-        if template.is_empty() {
-            return Ok(());
+        for segment in self.segments(template) {
+            let () = segment
+                .map_err(TemplateApplicationError::Parse)?
+                .query(&mut respond)
+                .map_err(TemplateApplicationError::Query)?
+                .pipe(&mut handle_query_output);
         }
 
-        let (segment, rest) = self
-            .parser
-            .parse(template)
-            .map_err(TemplateApplicationError::Parse)?;
-
-        let () = segment
-            .query(&mut respond)
-            .map_err(TemplateApplicationError::Query)?
-            .pipe(&mut handle_query_output);
-
-        self.apply_template(rest, respond, handle_query_output)
+        Ok(())
     }
 }
