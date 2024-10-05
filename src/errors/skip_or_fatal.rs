@@ -1,4 +1,4 @@
-/// Result type of [`IntoSkipOrFatal::into_skip_or_fatal`].
+/// Return type of [`IntoSkipOrFatal::into_skip_or_fatal`].
 pub enum SkipOrFatal<Skip, Fatal> {
     Skip(Skip),
     Fatal(Fatal),
