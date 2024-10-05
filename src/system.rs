@@ -4,14 +4,14 @@ use pipe_trait::Pipe;
 
 pub struct TemplateSystem<Parser, Query> {
     parser: Parser,
-    _phantom: PhantomData<Query>,
+    _query: PhantomData<Query>, // phantom Query is necessary to enable type inference later on
 }
 
 impl<Parser, Query> TemplateSystem<Parser, Query> {
     pub fn new(parser: Parser) -> Self {
         TemplateSystem {
             parser,
-            _phantom: PhantomData,
+            _query: PhantomData,
         }
     }
 }

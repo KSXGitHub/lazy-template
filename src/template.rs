@@ -6,14 +6,14 @@ use pipe_trait::Pipe;
 #[derive(Debug, Clone, Copy)]
 pub struct Template<'a, Parser, Query> {
     iter: SegmentResultIter<'a, Parser>,
-    _phantom: PhantomData<Query>,
+    _query: PhantomData<Query>, // phantom Query is necessary to enable type inference later on
 }
 
 impl<'a, Parser, Query> Template<'a, Parser, Query> {
     pub(crate) fn new(iter: SegmentResultIter<'a, Parser>) -> Self {
         Self {
             iter,
-            _phantom: PhantomData,
+            _query: PhantomData,
         }
     }
 }
