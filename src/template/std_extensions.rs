@@ -5,13 +5,16 @@ use core::fmt;
 use pipe_trait::Pipe;
 use std::io;
 
-impl<SegmentResultIter, Query> Template<SegmentResultIter, Query> {
+impl<SegmentResultIntoIter, Query> Template<SegmentResultIntoIter, Query>
+where
+    SegmentResultIntoIter: IntoIterator,
+{
     pub fn to_string<Segment, ParseError, RenderOutput, QueryOutput, QueryError, Respond>(
         self,
         respond: Respond,
     ) -> Result<String, TemplateApplicationError<ParseError, QueryError, fmt::Error>>
     where
-        SegmentResultIter: Iterator<Item = Result<Segment, ParseError>>,
+        SegmentResultIntoIter::Item: Into<Result<Segment, ParseError>>,
         RenderOutput: fmt::Display,
         Segment: Render<Respond, RenderOutput, QueryError>,
         Respond: FnMut(Query) -> Result<QueryOutput, QueryError>,
@@ -28,7 +31,7 @@ impl<SegmentResultIter, Query> Template<SegmentResultIter, Query> {
     ) -> Result<(), TemplateApplicationError<ParseError, QueryError, io::Error>>
     where
         Writer: io::Write,
-        SegmentResultIter: Iterator<Item = Result<Segment, ParseError>>,
+        SegmentResultIntoIter::Item: Into<Result<Segment, ParseError>>,
         RenderOutput: fmt::Display,
         Segment: Render<Respond, RenderOutput, QueryError>,
         Respond: FnMut(Query) -> Result<QueryOutput, QueryError>,

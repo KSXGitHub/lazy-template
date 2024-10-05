@@ -4,13 +4,13 @@ use derive_more::{Display, Error};
 use pipe_trait::Pipe;
 
 #[derive(Debug, Clone, Copy)]
-pub struct Template<SegmentResultIter, Query> {
-    iter: SegmentResultIter,
+pub struct Template<SegmentResultIntoIter, Query> {
+    iter: SegmentResultIntoIter,
     _query: PhantomData<Query>, // phantom Query is necessary to enable type inference later on
 }
 
-impl<SegmentResultIter, Query> Template<SegmentResultIter, Query> {
-    pub(crate) fn new(iter: SegmentResultIter) -> Self {
+impl<SegmentResultIntoIter, Query> Template<SegmentResultIntoIter, Query> {
+    pub(crate) fn new(iter: SegmentResultIntoIter) -> Self {
         Self {
             iter,
             _query: PhantomData,
@@ -25,7 +25,10 @@ pub enum TemplateApplicationError<ParseError, QueryError, WriteError> {
     Write(WriteError),
 }
 
-impl<SegmentResultIter, Query> Template<SegmentResultIter, Query> {
+impl<SegmentResultIntoIter, Query> Template<SegmentResultIntoIter, Query>
+where
+    SegmentResultIntoIter: IntoIterator,
+{
     pub fn write_to<Output, Segment, ParseError, RenderOutput, QueryOutput, QueryError, Respond>(
         self,
         output: &mut Output,
@@ -33,7 +36,7 @@ impl<SegmentResultIter, Query> Template<SegmentResultIter, Query> {
     ) -> Result<(), TemplateApplicationError<ParseError, QueryError, fmt::Error>>
     where
         Output: fmt::Write,
-        SegmentResultIter: Iterator<Item = Result<Segment, ParseError>>,
+        SegmentResultIntoIter::Item: Into<Result<Segment, ParseError>>,
         RenderOutput: fmt::Display,
         Segment: Render<Respond, RenderOutput, QueryError>,
         Respond: FnMut(Query) -> Result<QueryOutput, QueryError>,
@@ -70,13 +73,14 @@ impl<SegmentResultIter, Query> Template<SegmentResultIter, Query> {
         mut handle_query_output: HandleSegmentOutput,
     ) -> Result<(), TemplateApplicationError<ParseError, QueryError, Infallible>>
     where
-        SegmentResultIter: Iterator<Item = Result<Segment, ParseError>>,
+        SegmentResultIntoIter::Item: Into<Result<Segment, ParseError>>,
         HandleSegmentOutput: FnMut(RenderOutput),
         Segment: Render<Respond, RenderOutput, QueryError>,
         Respond: FnMut(Query) -> Result<QueryOutput, QueryError>,
     {
         for segment in self.iter {
             let () = segment
+                .into()
                 .map_err(TemplateApplicationError::Parse)?
                 .render(&mut respond)
                 .map_err(TemplateApplicationError::Query)?
