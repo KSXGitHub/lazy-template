@@ -4,8 +4,8 @@ pub use simple_query::{SimpleQuery, SimpleQueryParser};
 pub mod simple_escape;
 pub use simple_escape::{SimpleEscape, SimpleEscapeParser};
 
-pub mod simple_template;
-pub use simple_template::SimpleEnclosedTemplate;
+pub mod simple_template_system;
+pub use simple_template_system::SimpleEnclosedTemplateSystem;
 
 mod config;
 mod parser;

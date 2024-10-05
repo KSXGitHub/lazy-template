@@ -1,4 +1,4 @@
-use crate::enclosed::{self, SimpleEnclosedTemplate, SimpleEscapeParser, SimpleQueryParser};
+use crate::enclosed::{self, SimpleEnclosedTemplateSystem, SimpleEscapeParser, SimpleQueryParser};
 use pipe_trait::Pipe;
 
 /// Create a simple template of string interpolation with curly braces.
@@ -20,9 +20,9 @@ use pipe_trait::Pipe;
 /// assert_eq!(actual, expected);
 /// # }
 /// ```
-pub fn simple_curly_braces<'a>() -> SimpleEnclosedTemplate<'a> {
+pub fn simple_curly_braces<'a>() -> SimpleEnclosedTemplateSystem<'a> {
     enclosed::Parser::curly_braces()
         .with_escape_parser(SimpleEscapeParser)
         .with_query_parser(SimpleQueryParser)
-        .pipe(SimpleEnclosedTemplate::new)
+        .pipe(SimpleEnclosedTemplateSystem::new)
 }
