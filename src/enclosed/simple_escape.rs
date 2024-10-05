@@ -31,24 +31,25 @@ impl<'a> Parse<'a, ParserInput<'a>> for Parser {
             return Err(None);
         }
 
-        let (escaped, rest) =
+        let (escape_code, rest) =
             split_first_char(tail).ok_or(Some(ParseError::UnexpectedEndOfInput))?;
 
-        let escaped = escape_bracket(escaped, input.config)
-            .or_else(|| make_special_character(escaped))
-            .ok_or(ParseError::UnsupportedEscapeCode(escaped))
+        let char = escape_bracket(escape_code, input.config)
+            .or_else(|| make_special_character(escape_code))
+            .ok_or(ParseError::UnsupportedEscapeCode(escape_code))
             .map_err(Some)?;
 
-        Ok((escaped, rest))
+        Ok((char, rest))
     }
 }
 
-fn escape_bracket(escaped: char, config: ParserConfig) -> Option<char> {
-    (escaped == config.open_bracket || escaped == config.close_bracket).then_some(escaped)
+fn escape_bracket(escape_code: char, config: ParserConfig) -> Option<char> {
+    (escape_code == config.open_bracket || escape_code == config.close_bracket)
+        .then_some(escape_code)
 }
 
-fn make_special_character(escaped: char) -> Option<char> {
-    Some(match escaped {
+fn make_special_character(escape_code: char) -> Option<char> {
+    Some(match escape_code {
         '\\' => '\\',
         '0' => '\0',
         'b' => '\x08',
