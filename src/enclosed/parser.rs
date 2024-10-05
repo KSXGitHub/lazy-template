@@ -1,7 +1,6 @@
 use super::{simple_query::SimpleQueryParser, ComponentParserInput, ParserConfig, Segment};
-use crate::{Parse, ParseComponentError, SkipOrFatal};
+use crate::{Parse, ParseComponentError};
 use derive_more::{Display, Error};
-use pipe_trait::Pipe;
 use split_first_char::split_first_char;
 
 #[derive(Debug, Clone, Copy)]
@@ -59,14 +58,12 @@ where
             return Ok((Segment::Character(escaped), next_tail));
         }
 
-        let parse_query_result = self
+        let query_pair = self
             .query_parser
-            .parse(query_parser_input)
-            .map_err(ParseComponentError::skip_or_fatal);
-        match parse_query_result {
-            Ok((query, next_tail)) => return Ok((Segment::Expression(query), next_tail)),
-            Err(SkipOrFatal::Fatal(error)) => return error.pipe(ParseError::ParseQuery).pipe(Err),
-            Err(SkipOrFatal::Skip(_)) => (),
+            .parse_as_component(query_parser_input)
+            .map_err(ParseError::ParseQuery)?;
+        if let Some((query, rest)) = query_pair {
+            return Ok((Segment::Expression(query), rest));
         }
 
         if head == self.config.close_bracket {
