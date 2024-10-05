@@ -1,5 +1,5 @@
-use super::{ComponentParserInput, EnclosedTemplateParser};
-use crate::{Parse, SkipOrFatal, TemplateSystem};
+use super::ComponentParserInput;
+use crate::{Parse, SkipOrFatal};
 use derive_more::{AsRef, Deref, Display, Error, Into};
 use pipe_trait::Pipe;
 use split_first_char::split_first_char;
@@ -56,6 +56,3 @@ impl<'a> Parse<'a, ParserInput<'a>> for Parser {
         Ok((SimpleQuery(query), rest))
     }
 }
-
-pub type SimpleEnclosedTemplate<'a> =
-    TemplateSystem<EnclosedTemplateParser<SimpleQueryParser>, SimpleQuery<'a>>;
