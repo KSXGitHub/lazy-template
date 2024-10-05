@@ -20,3 +20,23 @@ fn make_special_characters() {
     dbg!(expected);
     assert_eq!(actual, expected);
 }
+
+#[test]
+fn escape_curly_braces() {
+    let map = |query| match query {
+        "foo" => Ok(123),
+        "bar" => Ok(456),
+        other => Err(format!("{other} is undefined")),
+    };
+    let actual = Parser::curly_braces()
+        .with_escape_parser(SimpleEscapeParser)
+        .with_query_parser(SimpleQueryParser)
+        .into_template_system::<SimpleQuery>()
+        .lazy_parse(r"\{foo\} is {foo}, \{bar\} is {bar}")
+        .to_string(map)
+        .unwrap();
+    dbg!(&actual);
+    let expected = "{foo} is 123, {bar} is 456";
+    dbg!(expected);
+    assert_eq!(actual, expected);
+}
