@@ -65,3 +65,28 @@ fn reject_invalid_escapes() {
         ))
     ));
 }
+
+#[test]
+fn reject_unexpected_end_of_input() {
+    let map = |query| match query {
+        "foo" => Ok(123),
+        "bar" => Ok(456),
+        other => Err(format!("{other} is undefined")),
+    };
+    let error = Parser::curly_braces()
+        .with_escape_parser(SimpleEscapeParser)
+        .with_query_parser(SimpleQueryParser)
+        .into_template_system::<SimpleQuery>()
+        .lazy_parse(r"foo {foo} bar {bar}\")
+        .to_string(map)
+        .unwrap_err();
+    dbg!(&error);
+    let expected_message = "Fail to escape: Unexpected end of input";
+    assert_eq!(error.to_string(), expected_message);
+    assert!(matches!(
+        error,
+        TemplateApplicationError::Parse(enclosed::ParseError::ParseEscape(
+            simple_escape::ParseError::UnexpectedEndOfInput,
+        )),
+    ));
+}
