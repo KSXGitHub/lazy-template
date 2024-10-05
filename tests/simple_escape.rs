@@ -1,10 +1,10 @@
 #![cfg(feature = "std")]
+use core::convert::Infallible;
 use lazy_template::{
     enclosed::{self, simple_escape, Parser, SimpleEscapeParser, SimpleQuery, SimpleQueryParser},
     IntoTemplateSystem, TemplateApplicationError,
 };
 use pretty_assertions::assert_eq;
-use std::convert::Infallible;
 
 #[test]
 fn make_special_characters() {
