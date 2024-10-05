@@ -1,6 +1,6 @@
 use super::ComponentParserInput;
 use crate::{Parse, SkipOrFatal};
-use derive_more::{AsRef, Deref, Display, Error, Into};
+use derive_more::{Display, Error};
 use pipe_trait::Pipe;
 use split_first_char::split_first_char;
 
@@ -10,15 +10,8 @@ pub type ParserInput<'a> = ComponentParserInput<'a>;
 pub struct SimpleQueryParser;
 pub type Parser = SimpleQueryParser;
 
-#[derive(Debug, Display, AsRef, Deref, Into, Clone, Copy)]
-pub struct SimpleQuery<'a>(&'a str);
+pub type SimpleQuery<'a> = &'a str;
 pub type ParseOutput<'a> = SimpleQuery<'a>;
-
-impl<'a> SimpleQuery<'a> {
-    pub fn as_str(&self) -> &'a str {
-        self
-    }
-}
 
 #[derive(Debug, Display, Error, Clone, Copy)]
 pub enum ParseError {
@@ -53,6 +46,6 @@ impl<'a> Parse<'a, ParserInput<'a>> for Parser {
             .map_err(SkipOrFatal::Fatal)?;
         let query = &tail[..close_index];
         let rest = &tail[(close_index + 1)..];
-        Ok((SimpleQuery(query), rest))
+        Ok((query, rest))
     }
 }
