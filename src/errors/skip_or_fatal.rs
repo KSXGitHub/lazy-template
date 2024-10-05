@@ -22,3 +22,14 @@ impl<Skip, Fatal> IntoSkipOrFatal for SkipOrFatal<Skip, Fatal> {
         self
     }
 }
+
+impl<Error> IntoSkipOrFatal for Option<Error> {
+    type Skip = ();
+    type Fatal = Error;
+    fn into_skip_or_fatal(self) -> SkipOrFatal<Self::Skip, Self::Fatal> {
+        match self {
+            None => SkipOrFatal::Skip(()),
+            Some(error) => SkipOrFatal::Fatal(error),
+        }
+    }
+}
