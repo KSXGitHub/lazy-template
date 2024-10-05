@@ -20,6 +20,7 @@ impl<SegmentResultIter, Query> Template<SegmentResultIter, Query> {
         self.write_to(&mut buf, respond)?;
         Ok(buf)
     }
+
     pub fn to_writer<Writer, Segment, ParseError, RenderOutput, QueryOutput, QueryError, Respond>(
         self,
         writer: &mut Writer,
