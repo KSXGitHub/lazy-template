@@ -102,3 +102,5 @@ impl<SegmentResultIter, Query> Template<SegmentResultIter, Query> {
         Ok(())
     }
 }
+
+mod std_extensions;
