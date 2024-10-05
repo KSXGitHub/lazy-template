@@ -12,11 +12,11 @@ fn make_special_characters() {
         .with_escape_parser(SimpleEscapeParser)
         .with_query_parser(SimpleQueryParser)
         .into_template_system::<SimpleQuery>()
-        .lazy_parse(r"special characters: \\, \0, \b, \n, \r, \t")
+        .lazy_parse(r"special characters: \\, \0, \b, \e, \n, \r, \t")
         .to_string(Ok::<&str, Infallible>)
         .unwrap();
     dbg!(&actual);
-    let expected = "special characters: \\, \0, \u{8}, \n, \r, \t";
+    let expected = "special characters: \\, \0, \u{8}, \u{1b}, \n, \r, \t";
     dbg!(expected);
     assert_eq!(actual, expected);
 }

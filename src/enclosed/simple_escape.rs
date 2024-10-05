@@ -51,6 +51,7 @@ fn map_single_char_escaped(escaped: char, config: ParserConfig) -> Option<char> 
         '\\' => '\\',
         '0' => '\0',
         'b' => '\x08',
+        'e' => '\x1b',
         'n' => '\n',
         'r' => '\r',
         't' => '\t',
