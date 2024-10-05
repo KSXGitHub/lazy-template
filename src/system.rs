@@ -25,3 +25,11 @@ where
         SegmentResultIter::new(text, &self.parser).pipe(Template::new)
     }
 }
+
+/// Convert a [parser](Parse) into a [`TemplateSystem`].
+pub trait IntoTemplateSystem: Sized {
+    fn into_template_system<Query>(self) -> TemplateSystem<Self, Query> {
+        TemplateSystem::new(self)
+    }
+}
+impl<'a, Parser> IntoTemplateSystem for Parser where Parser: Parse<'a> {}

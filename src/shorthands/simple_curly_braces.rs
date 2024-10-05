@@ -1,5 +1,7 @@
-use crate::enclosed::{self, SimpleEnclosedTemplateSystem, SimpleEscapeParser, SimpleQueryParser};
-use pipe_trait::Pipe;
+use crate::{
+    enclosed::{self, SimpleEnclosedTemplateSystem, SimpleEscapeParser, SimpleQueryParser},
+    IntoTemplateSystem,
+};
 
 /// Create a simple template of string interpolation with curly braces.
 ///
@@ -46,7 +48,7 @@ pub fn simple_curly_braces<'a>() -> SimpleEnclosedTemplateSystem<'a> {
     enclosed::Parser::curly_braces()
         .with_escape_parser(SimpleEscapeParser)
         .with_query_parser(SimpleQueryParser)
-        .pipe(SimpleEnclosedTemplateSystem::new)
+        .into_template_system()
 }
 
 #[cfg(feature = "std")]
