@@ -1,7 +1,7 @@
 #![cfg(feature = "std")]
 use lazy_template::{
-    enclosed::{Parser, SimpleEscapeParser, SimpleQuery, SimpleQueryParser},
-    IntoTemplateSystem,
+    enclosed::{self, simple_escape, Parser, SimpleEscapeParser, SimpleQuery, SimpleQueryParser},
+    IntoTemplateSystem, TemplateApplicationError,
 };
 use pretty_assertions::assert_eq;
 use std::convert::Infallible;
@@ -39,4 +39,29 @@ fn escape_curly_braces() {
     let expected = "{foo} is 123, {bar} is 456";
     dbg!(expected);
     assert_eq!(actual, expected);
+}
+
+#[test]
+fn reject_invalid_escapes() {
+    let map = |query| match query {
+        "foo" => Ok(123),
+        "bar" => Ok(456),
+        other => Err(format!("{other} is undefined")),
+    };
+    let error = Parser::curly_braces()
+        .with_escape_parser(SimpleEscapeParser)
+        .with_query_parser(SimpleQueryParser)
+        .into_template_system::<SimpleQuery>()
+        .lazy_parse(r"foo {foo} b\ar {bar}")
+        .to_string(map)
+        .unwrap_err();
+    dbg!(&error);
+    let expected_message = "Fail to escape: Unexpected token 'a'";
+    assert_eq!(error.to_string(), expected_message);
+    assert!(matches!(
+        error,
+        TemplateApplicationError::Parse(enclosed::ParseError::ParseEscape(
+            simple_escape::ParseError::UnexpectedChar('a')
+        ))
+    ));
 }
