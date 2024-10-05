@@ -1,4 +1,4 @@
-use super::{simple_query::SimpleQueryParser, ParserConfig, QueryParserInput, Segment};
+use super::{simple_query::SimpleQueryParser, ComponentParserInput, ParserConfig, Segment};
 use crate::Parse;
 use derive_more::{Display, Error};
 use split_first_char::split_first_char;
@@ -38,7 +38,7 @@ pub enum ParseError<ParseQueryError> {
 
 impl<'a, QueryParser> Parse<'a> for Parser<QueryParser>
 where
-    QueryParser: Parse<'a, QueryParserInput<'a>>,
+    QueryParser: Parse<'a, ComponentParserInput<'a>>,
 {
     type Output = Segment<QueryParser::Output>;
     type Error = ParseError<QueryParser::Error>;
@@ -53,7 +53,7 @@ where
         }
 
         if head == self.config.open_bracket {
-            let query_parser_input = QueryParserInput {
+            let query_parser_input = ComponentParserInput {
                 text: tail,
                 config: self.config,
             };

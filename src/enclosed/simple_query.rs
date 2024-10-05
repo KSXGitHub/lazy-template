@@ -1,8 +1,8 @@
-use super::{EnclosedTemplateParser, QueryParserInput};
+use super::{EnclosedTemplateParser, ComponentParserInput};
 use crate::{Parse, TemplateSystem};
 use derive_more::{AsRef, Deref, Display, Error, Into};
 
-pub type ParserInput<'a> = QueryParserInput<'a>;
+pub type ParserInput<'a> = ComponentParserInput<'a>;
 
 #[derive(Debug, Clone, Copy)]
 pub struct SimpleQueryParser;

@@ -25,7 +25,7 @@ impl ParserConfig {
     }
 }
 
-pub struct QueryParserInput<'a> {
+pub struct ComponentParserInput<'a> {
     pub text: &'a str,
     pub config: ParserConfig,
 }
