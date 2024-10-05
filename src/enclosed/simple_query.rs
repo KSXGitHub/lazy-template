@@ -1,6 +1,8 @@
-use super::{EnclosedTemplateParser, ComponentParserInput};
-use crate::{Parse, TemplateSystem};
+use super::{ComponentParserInput, EnclosedTemplateParser};
+use crate::{Parse, SkipOrFatal, TemplateSystem};
 use derive_more::{AsRef, Deref, Display, Error, Into};
+use pipe_trait::Pipe;
+use split_first_char::split_first_char;
 
 pub type ParserInput<'a> = ComponentParserInput<'a>;
 
@@ -20,22 +22,37 @@ impl<'a> SimpleQuery<'a> {
 
 #[derive(Debug, Display, Error, Clone, Copy)]
 pub enum ParseError {
+    #[display("Unexpected token {_0:?}")]
+    UnexpectedChar(#[error(not(source))] char),
     #[display("Unexpected end of input")]
     UnexpectedEndOfInput,
 }
 
 impl<'a> Parse<'a, ParserInput<'a>> for Parser {
     type Output = ParseOutput<'a>;
-    type Error = ParseError;
+    type Error = SkipOrFatal<(), ParseError>;
 
     fn parse(&'a self, input: ParserInput<'a>) -> Result<(Self::Output, &'a str), Self::Error> {
-        let (close_index, _) = input
-            .text
+        let (head, tail) = split_first_char(input.text).ok_or(SkipOrFatal::Skip(()))?;
+
+        if head == input.config.close_bracket {
+            return head
+                .pipe(ParseError::UnexpectedChar)
+                .pipe(SkipOrFatal::Fatal)
+                .pipe(Err);
+        }
+
+        if head != input.config.open_bracket {
+            return Err(SkipOrFatal::Skip(()));
+        }
+
+        let (close_index, _) = tail
             .char_indices()
             .find(|(_, char)| *char == input.config.close_bracket)
-            .ok_or(ParseError::UnexpectedEndOfInput)?;
-        let query = &input.text[..close_index];
-        let rest = &input.text[(close_index + 1)..];
+            .ok_or(ParseError::UnexpectedEndOfInput)
+            .map_err(SkipOrFatal::Fatal)?;
+        let query = &tail[..close_index];
+        let rest = &tail[(close_index + 1)..];
         Ok((SimpleQuery(query), rest))
     }
 }

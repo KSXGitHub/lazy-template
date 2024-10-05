@@ -1,6 +1,7 @@
 use super::{simple_query::SimpleQueryParser, ComponentParserInput, ParserConfig, Segment};
-use crate::Parse;
+use crate::{Parse, ParseComponentError, SkipOrFatal};
 use derive_more::{Display, Error};
+use pipe_trait::Pipe;
 use split_first_char::split_first_char;
 
 #[derive(Debug, Clone, Copy)]
@@ -39,11 +40,17 @@ pub enum ParseError<ParseQueryError> {
 impl<'a, QueryParser> Parse<'a> for Parser<QueryParser>
 where
     QueryParser: Parse<'a, ComponentParserInput<'a>>,
+    QueryParser::Error: ParseComponentError,
 {
     type Output = Segment<QueryParser::Output>;
-    type Error = ParseError<QueryParser::Error>;
+    type Error = ParseError<<QueryParser::Error as ParseComponentError>::Fatal>;
 
     fn parse(&'a self, input: &'a str) -> Result<(Self::Output, &'a str), Self::Error> {
+        let query_parser_input = ComponentParserInput {
+            text: input,
+            config: self.config,
+        };
+
         let (head, tail) = split_first_char(input).ok_or(ParseError::UnexpectedEndOfInput)?;
 
         if Some(head) == self.config.escape {
@@ -52,16 +59,14 @@ where
             return Ok((Segment::Character(escaped), next_tail));
         }
 
-        if head == self.config.open_bracket {
-            let query_parser_input = ComponentParserInput {
-                text: tail,
-                config: self.config,
-            };
-            let (query, next_tail) = self
-                .query_parser
-                .parse(query_parser_input)
-                .map_err(ParseError::ParseQuery)?;
-            return Ok((Segment::Expression(query), next_tail));
+        let parse_query_result = self
+            .query_parser
+            .parse(query_parser_input)
+            .map_err(ParseComponentError::skip_or_fatal);
+        match parse_query_result {
+            Ok((query, next_tail)) => return Ok((Segment::Expression(query), next_tail)),
+            Err(SkipOrFatal::Fatal(error)) => return error.pipe(ParseError::ParseQuery).pipe(Err),
+            Err(SkipOrFatal::Skip(_)) => (),
         }
 
         if head == self.config.close_bracket {
