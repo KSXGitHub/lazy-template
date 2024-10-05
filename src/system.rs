@@ -2,6 +2,7 @@ use crate::{iter::SegmentResultIter, Parse, Template};
 use core::marker::PhantomData;
 use pipe_trait::Pipe;
 
+#[derive(Debug, Clone, Copy)]
 pub struct TemplateSystem<Parser, Query> {
     parser: Parser,
     _query: PhantomData<Query>, // phantom Query is necessary to enable type inference later on
