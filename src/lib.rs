@@ -8,12 +8,12 @@ pub use enclosed::EnclosedTemplateParser;
 
 mod errors;
 mod parse;
-mod segment;
+mod render;
 mod shorthands;
 mod system;
 
 pub use errors::*;
 pub use parse::*;
-pub use segment::*;
+pub use render::*;
 pub use shorthands::*;
 pub use system::*;
