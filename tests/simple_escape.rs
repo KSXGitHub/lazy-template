@@ -56,12 +56,12 @@ fn reject_invalid_escapes() {
         .to_string(map)
         .unwrap_err();
     dbg!(&error);
-    let expected_message = "Fail to escape: Unexpected token 'a'";
+    let expected_message = "Fail to escape: Unsupported escape code 'a'";
     assert_eq!(error.to_string(), expected_message);
     assert!(matches!(
         error,
         TemplateApplicationError::Parse(enclosed::ParseError::ParseEscape(
-            simple_escape::ParseError::UnexpectedChar('a'),
+            simple_escape::ParseError::UnsupportedEscapeCode('a'),
         )),
     ));
 }

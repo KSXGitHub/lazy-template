@@ -14,8 +14,8 @@ pub type ParseOutput = SimpleEscape;
 
 #[derive(Debug, Display, Error, Clone, Copy)]
 pub enum ParseError {
-    #[display("Unexpected token {_0:?}")]
-    UnexpectedChar(#[error(not(source))] char),
+    #[display("Unsupported escape code {_0:?}")]
+    UnsupportedEscapeCode(#[error(not(source))] char),
     #[display("Unexpected end of input")]
     UnexpectedEndOfInput,
 }
@@ -36,7 +36,7 @@ impl<'a> Parse<'a, ParserInput<'a>> for Parser {
 
         let escaped = escape_bracket(escaped, input.config)
             .or_else(|| make_special_character(escaped))
-            .ok_or(ParseError::UnexpectedChar(escaped))
+            .ok_or(ParseError::UnsupportedEscapeCode(escaped))
             .map_err(Some)?;
 
         Ok((escaped, rest))
