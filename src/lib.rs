@@ -11,9 +11,11 @@ mod parse;
 mod render;
 mod shorthands;
 mod system;
+mod template;
 
 pub use errors::*;
 pub use parse::*;
 pub use render::*;
 pub use shorthands::*;
 pub use system::*;
+pub use template::*;

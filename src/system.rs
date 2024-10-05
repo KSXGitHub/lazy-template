@@ -1,6 +1,5 @@
-use crate::{iter::SegmentResultIter, Parse, Render};
-use core::{convert::Infallible, fmt, marker::PhantomData};
-use derive_more::{Display, Error};
+use crate::{iter::SegmentResultIter, Parse, Template};
+use core::marker::PhantomData;
 use pipe_trait::Pipe;
 
 pub struct TemplateSystem<Parser, Query> {
@@ -17,86 +16,11 @@ impl<Parser, Query> TemplateSystem<Parser, Query> {
     }
 }
 
-#[derive(Debug, Display, Error, Clone, Copy)]
-pub enum TemplateApplicationError<ParseError, QueryError, WriteError> {
-    Parse(ParseError),
-    Query(QueryError),
-    Write(WriteError),
-}
-
 impl<'a, Parser, Query> TemplateSystem<Parser, Query>
 where
     Parser: Parse<'a>,
 {
-    #[cfg(feature = "std")]
-    pub fn to_string<RenderOutput, QueryOutput, QueryError, Respond>(
-        &'a self,
-        template: &'a str,
-        respond: Respond,
-    ) -> Result<String, TemplateApplicationError<Parser::Error, QueryError, fmt::Error>>
-    where
-        RenderOutput: fmt::Display,
-        Parser::Output: Render<Respond, RenderOutput, QueryError>,
-        Respond: FnMut(Query) -> Result<QueryOutput, QueryError>,
-    {
-        let mut buf = String::new();
-        self.write_to(&mut buf, template, respond)?;
-        Ok(buf)
-    }
-
-    pub fn write_to<Output, RenderOutput, QueryOutput, QueryError, Respond>(
-        &'a self,
-        output: &mut Output,
-        template: &'a str,
-        respond: Respond,
-    ) -> Result<(), TemplateApplicationError<Parser::Error, QueryError, fmt::Error>>
-    where
-        Output: fmt::Write,
-        RenderOutput: fmt::Display,
-        Parser::Output: Render<Respond, RenderOutput, QueryError>,
-        Respond: FnMut(Query) -> Result<QueryOutput, QueryError>,
-    {
-        let mut write_error = None;
-
-        self.apply_template(template, respond, |response| {
-            write_error = write!(output, "{response}").err()
-        })
-        .map_err(|error| match error {
-            TemplateApplicationError::Parse(error) => TemplateApplicationError::Parse(error),
-            TemplateApplicationError::Query(error) => TemplateApplicationError::Query(error),
-            TemplateApplicationError::Write(error) => match error {},
-        })?;
-
-        if let Some(error) = write_error {
-            return error.pipe(TemplateApplicationError::Write).pipe(Err);
-        }
-
-        Ok(())
-    }
-
-    pub fn segments(&'a self, template: &'a str) -> SegmentResultIter<'a, Parser> {
-        SegmentResultIter::new(template, &self.parser)
-    }
-
-    fn apply_template<HandleSegmentOutput, RenderOutput, QueryOutput, QueryError, Respond>(
-        &'a self,
-        template: &'a str,
-        mut respond: Respond,
-        mut handle_query_output: HandleSegmentOutput,
-    ) -> Result<(), TemplateApplicationError<Parser::Error, QueryError, Infallible>>
-    where
-        HandleSegmentOutput: FnMut(RenderOutput),
-        Parser::Output: Render<Respond, RenderOutput, QueryError>,
-        Respond: FnMut(Query) -> Result<QueryOutput, QueryError>,
-    {
-        for segment in self.segments(template) {
-            let () = segment
-                .map_err(TemplateApplicationError::Parse)?
-                .render(&mut respond)
-                .map_err(TemplateApplicationError::Query)?
-                .pipe(&mut handle_query_output);
-        }
-
-        Ok(())
+    pub fn lazy_parse(&'a self, text: &'a str) -> Template<'a, Parser, Query> {
+        SegmentResultIter::new(text, &self.parser).pipe(Template::new)
     }
 }

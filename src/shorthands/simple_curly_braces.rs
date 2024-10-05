@@ -9,7 +9,8 @@ use pipe_trait::Pipe;
 /// # use pretty_assertions::assert_eq;
 /// # use lazy_template::simple_curly_braces;
 /// let actual = simple_curly_braces()
-///     .to_string("foo = {FOO}; bar = {BAR}", |query| match query {
+///     .lazy_parse("foo = {FOO}; bar = {BAR}")
+///     .to_string(|query| match query {
 ///         "FOO" => Ok(123),
 ///         "BAR" => Ok(456),
 ///         _ => Err(()),
