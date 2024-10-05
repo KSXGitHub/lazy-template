@@ -75,8 +75,7 @@ pub enum ParseError<ParseEscapeError, ParseQueryError> {
 
 impl<'a, EscapeParser, QueryParser> Parse<'a> for Parser<EscapeParser, QueryParser>
 where
-    EscapeParser: Parse<'a, ComponentParserInput<'a>>,
-    EscapeParser::Output: Into<char>,
+    EscapeParser: Parse<'a, ComponentParserInput<'a>, Output = char>,
     EscapeParser::Error: IntoSkipOrFatal,
     QueryParser: Parse<'a, ComponentParserInput<'a>>,
     QueryParser::Error: IntoSkipOrFatal,
@@ -98,7 +97,7 @@ where
             .parse_as_component(component_parser_input)
             .map_err(ParseError::ParseEscape)?;
         if let Some((escaped, rest)) = escape_pair {
-            return Ok((Segment::Character(escaped.into()), rest));
+            return Ok((Segment::Character(escaped), rest));
         }
 
         let query_pair = self
