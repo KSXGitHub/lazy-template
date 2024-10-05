@@ -25,7 +25,7 @@ impl<'a> Parse<'a, ParserInput<'a>> for Parser {
     type Output = ParseOutput<'a>;
     type Error = Option<ParseError>;
 
-    fn parse(&'a self, input: ParserInput<'a>) -> Result<(Self::Output, &'a str), Self::Error> {
+    fn parse(&self, input: ParserInput<'a>) -> Result<(Self::Output, &'a str), Self::Error> {
         let (head, tail) = split_first_char(input.text).ok_or(None)?;
 
         if head == input.config.close_bracket {

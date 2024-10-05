@@ -87,7 +87,7 @@ where
         <QueryParser::Error as IntoSkipOrFatal>::Fatal,
     >;
 
-    fn parse(&'a self, input: &'a str) -> Result<(Self::Output, &'a str), Self::Error> {
+    fn parse(&self, input: &'a str) -> Result<(Self::Output, &'a str), Self::Error> {
         let component_parser_input = ComponentParserInput {
             text: input,
             config: self.config,

@@ -7,10 +7,10 @@ type ParseAsComponentResult<'a, Output, Error> =
 pub trait Parse<'a, Input = &'a str>: Sized {
     type Output;
     type Error;
-    fn parse(&'a self, input: Input) -> Result<(Self::Output, &'a str), Self::Error>;
+    fn parse(&self, input: Input) -> Result<(Self::Output, &'a str), Self::Error>;
 
     fn parse_as_component(
-        &'a self,
+        &self,
         input: Input,
     ) -> ParseAsComponentResult<'a, Self::Output, Self::Error>
     where
