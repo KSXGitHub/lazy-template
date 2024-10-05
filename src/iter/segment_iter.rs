@@ -1,10 +1,21 @@
 use crate::Parse;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug)]
 pub struct SegmentResultIter<'a, Parser> {
     template: &'a str,
     parser: &'a Parser,
 }
+
+impl<'a, Parser> Clone for SegmentResultIter<'a, Parser> {
+    fn clone(&self) -> Self {
+        SegmentResultIter {
+            template: self.template,
+            parser: self.parser,
+        }
+    }
+}
+
+impl<'a, Parser> Copy for SegmentResultIter<'a, Parser> {}
 
 impl<'a, Parser> SegmentResultIter<'a, Parser> {
     pub(crate) fn new(template: &'a str, parser: &'a Parser) -> Self {
