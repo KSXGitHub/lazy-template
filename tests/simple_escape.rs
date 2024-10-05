@@ -61,8 +61,8 @@ fn reject_invalid_escapes() {
     assert!(matches!(
         error,
         TemplateApplicationError::Parse(enclosed::ParseError::ParseEscape(
-            simple_escape::ParseError::UnexpectedChar('a')
-        ))
+            simple_escape::ParseError::UnexpectedChar('a'),
+        )),
     ));
 }
 
