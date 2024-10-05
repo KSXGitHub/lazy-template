@@ -21,7 +21,7 @@ impl<'a, Parser, Query> TemplateSystem<Parser, Query>
 where
     Parser: Parse<'a>,
 {
-    pub fn lazy_parse(&'a self, text: &'a str) -> Template<'a, Parser, Query> {
+    pub fn lazy_parse(&'a self, text: &'a str) -> Template<SegmentResultIter<'a, Parser>, Query> {
         SegmentResultIter::new(text, &self.parser).pipe(Template::new)
     }
 }

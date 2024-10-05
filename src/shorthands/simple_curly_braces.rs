@@ -26,3 +26,12 @@ pub fn simple_curly_braces<'a>() -> SimpleEnclosedTemplateSystem<'a> {
         .with_query_parser(SimpleQueryParser)
         .pipe(SimpleEnclosedTemplateSystem::new)
 }
+
+#[cfg(feature = "std")]
+#[test]
+fn type_inference() {
+    let _ = simple_curly_braces().lazy_parse("").to_string(|query| {
+        let _ = query.to_string();
+        Ok::<_, ()>(0)
+    });
+}
