@@ -34,7 +34,8 @@ impl<'a> Parse<'a, ParserInput<'a>> for Parser {
         let (escaped, rest) =
             split_first_char(tail).ok_or(Some(ParseError::UnexpectedEndOfInput))?;
 
-        let escaped = map_single_char_escaped(escaped, input.config)
+        let escaped = escape_bracket(escaped, input.config)
+            .or_else(|| make_special_character(escaped))
             .ok_or(ParseError::UnexpectedChar(escaped))
             .map_err(Some)?;
 
@@ -42,11 +43,11 @@ impl<'a> Parse<'a, ParserInput<'a>> for Parser {
     }
 }
 
-fn map_single_char_escaped(escaped: char, config: ParserConfig) -> Option<char> {
-    if escaped == config.open_bracket || escaped == config.close_bracket {
-        return Some(escaped);
-    }
+fn escape_bracket(escaped: char, config: ParserConfig) -> Option<char> {
+    (escaped == config.open_bracket || escaped == config.close_bracket).then_some(escaped)
+}
 
+fn make_special_character(escaped: char) -> Option<char> {
     Some(match escaped {
         '\\' => '\\',
         '0' => '\0',
