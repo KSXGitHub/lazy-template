@@ -51,7 +51,7 @@ where
     /// # }
     /// ```
     ///
-    /// Unlike [`lazy_parse`](Self::lazy_parse), this function would fail early if the template fails to parse (e.g. syntax error):
+    /// Unlike [`lazy_parse`](Self::lazy_parse), this function would fail if the template fails to parse (e.g. syntax error):
     ///
     /// ```
     /// # #[cfg(not(feature = "std"))] fn main() {}
