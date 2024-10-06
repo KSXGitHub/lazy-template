@@ -30,6 +30,8 @@ impl<SegmentResultIntoIter, Query> Template<SegmentResultIntoIter, Query>
 where
     SegmentResultIntoIter: IntoIterator,
 {
+    /// Apply the template, and write the resulting segment outputs that implement [`fmt::Display`] to a
+    /// buffer that implements [`fmt::Write`].
     pub fn write_to<Output, Segment, ParseError, RenderOutput, QueryOutput, QueryError, Respond>(
         self,
         output: &mut Output,
@@ -60,6 +62,7 @@ where
         Ok(())
     }
 
+    /// Apply the template, and send the resulting segment outputs to `handle_query_output`.
     fn apply<
         Segment,
         ParseError,

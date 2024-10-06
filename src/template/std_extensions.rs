@@ -9,6 +9,7 @@ impl<SegmentResultIntoIter, Query> Template<SegmentResultIntoIter, Query>
 where
     SegmentResultIntoIter: IntoIterator,
 {
+    /// Apply the template, and join the resulting segment outputs together into a [`String`].
     pub fn to_string<Segment, ParseError, RenderOutput, QueryOutput, QueryError, Respond>(
         self,
         respond: Respond,
@@ -24,6 +25,8 @@ where
         Ok(buf)
     }
 
+    /// Apply the template, and write the resulting segment outputs that implement [`fmt::Display`] to a
+    /// writer that implements [`io::Write`].
     pub fn to_writer<Writer, Segment, ParseError, RenderOutput, QueryOutput, QueryError, Respond>(
         self,
         writer: &mut Writer,
