@@ -1,6 +1,10 @@
 _default:
   just all
 
+# Check code format
+fmt:
+  cargo fmt --check
+
 # Check and generate the documentation
 doc *args:
   RUSTDOCFLAGS='-D warnings' cargo doc --locked {{args}}
