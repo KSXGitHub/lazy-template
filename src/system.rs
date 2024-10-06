@@ -63,10 +63,10 @@ where
     ///         _ => Err(format!("Can't answer {query:?}")),
     ///     })
     ///     .unwrap_err();
-    /// assert_eq!(
-    ///     error.to_string(),
-    ///     "Fail to parse query: Unexpected token '}'"
-    /// );
+    /// # assert_eq!(
+    /// #     error.to_string(),
+    /// #     "Fail to parse query: Unexpected token '}'"
+    /// # );
     /// assert_eq!(output, "Alice is a 20 years "); // output is partially written
     /// # }
     /// ```
