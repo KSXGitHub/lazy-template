@@ -23,4 +23,4 @@ test *args:
 
 # Run all combinations of checks and features
 all *args:
-  bash check-all.bash
+  bash check-all.bash {{args}}
