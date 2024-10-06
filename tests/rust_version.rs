@@ -10,7 +10,7 @@ use std::fs;
 fn sync() {
     let ws_root = MetadataCommand::new()
         .exec()
-        .expect("Execute `cargo metadata`")
+        .expect("the command `cargo metadata` should execute successfully")
         .workspace_root;
     dbg!(&ws_root);
     let rust_toolchain = ws_root
@@ -19,7 +19,7 @@ fn sync() {
         .expect("the rust-toolchain file should be readable")
         .trim()
         .pipe(Version::parse)
-        .expect("the rust-toolchain should be valid semver");
+        .expect("the content rust-toolchain should be valid semver");
     dbg!(&rust_toolchain);
     let Version { major, minor, .. } = &rust_toolchain;
     let rust_version = ws_root
