@@ -1,11 +1,11 @@
-//! ## Description
+//! # Description
 //!
 //! This is a string template crate.
 //! Instead of requiring a complete set of inputs (such as via a `struct`, a `HashMap`, or a JSON object) to be available,
 //! the templates from this crate would send queries (which would usually be the names of the variables) to a function
 //! (called "responder") to get the value of each query.
 //!
-//! ## Usage Examples
+//! # Usage Examples
 //!
 //! **Example 1:** Lazily parse template
 //!
