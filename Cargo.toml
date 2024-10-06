@@ -6,7 +6,6 @@ repository = "https://github.com/KSXGitHub/lazy-template.git"
 documentation = "https://docs.rs/lazy-template"
 authors = ["khai96_ <hvksmr1996@gmail.com>"]
 license = "MIT"
-license-file = "LICENSE.md"
 readme = "README.md"
 keywords = [
   "template",
