@@ -24,6 +24,52 @@ impl<'a, Parser, Query> TemplateSystem<Parser, Query>
 where
     Parser: Parse<'a>,
 {
+    /// Create a [`Template`] from a template string.
+    ///
+    /// ```
+    /// # #[cfg(not(feature = "std"))] fn main() {}
+    /// # #[cfg(feature = "std")] fn main() {
+    /// # use pretty_assertions::assert_eq;
+    /// use lazy_template::{Template, simple_curly_braces};
+    /// let system = simple_curly_braces();
+    /// let template: Template<_, _> = system.lazy_parse("{name} is a {age} years old {gender}");
+    /// let output = template
+    ///     .to_string(|query| match query {
+    ///         "name" => Ok("Alice"),
+    ///         "age" => Ok("20"),
+    ///         "gender" => Ok("girl"),
+    ///         _ => Err(format!("Can't answer {query:?}")),
+    ///     })
+    ///     .unwrap();
+    /// assert_eq!(output, "Alice is a 20 years old girl");
+    /// # }
+    /// ```
+    ///
+    /// [`Template`] only parses each segment just before it is needed, meaning that even a template with syntax error
+    /// can produce a partial output:
+    ///
+    /// ```
+    /// # #[cfg(not(feature = "std"))] fn main() {}
+    /// # #[cfg(feature = "std")] fn main() {
+    /// # use pretty_assertions::assert_eq;
+    /// let template_string = "{name} is a {age} years } old {gender})"; // incorrectly placed closing curly bracket
+    /// let mut output = String::new();
+    /// let error = lazy_template::simple_curly_braces()
+    ///     .lazy_parse(template_string)
+    ///     .write_to(&mut output, |query| match query {
+    ///         "name" => Ok("Alice"),
+    ///         "age" => Ok("20"),
+    ///         "gender" => Ok("girl"),
+    ///         _ => Err(format!("Can't answer {query:?}")),
+    ///     })
+    ///     .unwrap_err();
+    /// assert_eq!(
+    ///     error.to_string(),
+    ///     "Fail to parse query: Unexpected token '}'"
+    /// );
+    /// assert_eq!(output, "Alice is a 20 years "); // output is partially written
+    /// # }
+    /// ```
     pub fn lazy_parse(&'a self, text: &'a str) -> Template<LazyParseIter<'a, Parser>, Query> {
         LazyParseIter::new(text, &self.parser).pipe(Template::new)
     }
