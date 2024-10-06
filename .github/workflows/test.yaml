@@ -20,7 +20,8 @@ jobs:
         continue-on-error: true
         with:
           path: |
-            ~/.cargo
+            ~/.cargo/registry
+            ~/.cargo/git
             target
           key: ${{ github.job }}-${{ runner.os }}-${{ hashFiles('rust-toolchain') }}-${{ hashFiles('Cargo.lock') }}
           restore-keys: |
