@@ -2,7 +2,9 @@
 
 ## Description
 
-This is a string template crate. Instead of requiring a complete set of inputs (such as via a `struct`, a `HashMap`, or a JSON object) to be available, the templates from this crate would send queries (which would usually be the names of the variables) to a function (called "responder") to get the value of each query.
+Imagine that you need to interpolate strings, but the template variables are not quite cheap to load (such as system resources, network request, etc). And since the template are user-provided, you can't know ahead of time which variables you would need to load. You would need a flexible string template library that doesn't require calculating all these variables upfront.
+
+Instead of requiring a complete set of inputs (such as via a `struct`, a `HashMap`, or a JSON object) to be available, the templates from this crate would send queries (which would usually be the names of the variables) to a function (called "responder") to get the value of each query.
 
 ## Documentation
 
@@ -25,6 +27,8 @@ let output = template
     .unwrap();
 assert_eq!(output, "Alice is a 20 years old girl");
 ```
+
+The `query` in the example above is merely a variable name, but not necessarily. In more advanced use cases, `query` could be an expression, a command, a network request, or request for some system resource that would take time to load.
 
 ## License
 
