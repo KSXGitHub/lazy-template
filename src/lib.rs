@@ -36,7 +36,7 @@
 //! # }
 //! ```
 //!
-//! _see more:_ [`lazy_parse`](crate::TemplateSystem::lazy_parse)
+//! _see more:_ [`simple_curly_braces`], [`lazy_parse`](crate::TemplateSystem::lazy_parse).
 //!
 //! **Example 2:** Eagerly parse template:
 //!
@@ -71,7 +71,7 @@
 //! # }
 //! ```
 //!
-//! _see more:_ [`eager_parse`](crate::TemplateSystem::eager_parse)
+//! _see more:_ [`simple_curly_braces`], [`eager_parse`](crate::TemplateSystem::eager_parse).
 //!
 #![cfg_attr(not(feature = "std"), no_std)]
 
