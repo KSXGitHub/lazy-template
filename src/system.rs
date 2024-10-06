@@ -1,4 +1,4 @@
-use crate::{iter::SegmentResultIter, Parse, Template};
+use crate::{iter::LazyParseIter, Parse, Template};
 use core::marker::PhantomData;
 use pipe_trait::Pipe;
 
@@ -21,8 +21,8 @@ impl<'a, Parser, Query> TemplateSystem<Parser, Query>
 where
     Parser: Parse<'a>,
 {
-    pub fn lazy_parse(&'a self, text: &'a str) -> Template<SegmentResultIter<'a, Parser>, Query> {
-        SegmentResultIter::new(text, &self.parser).pipe(Template::new)
+    pub fn lazy_parse(&'a self, text: &'a str) -> Template<LazyParseIter<'a, Parser>, Query> {
+        LazyParseIter::new(text, &self.parser).pipe(Template::new)
     }
 }
 

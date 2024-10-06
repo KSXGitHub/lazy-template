@@ -1,3 +1,3 @@
-mod segment_iter;
+mod lazy_parse_iter;
 
-pub use segment_iter::*;
+pub use lazy_parse_iter::*;

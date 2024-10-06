@@ -1,26 +1,26 @@
 use crate::Parse;
 
 #[derive(Debug)]
-pub struct SegmentResultIter<'a, Parser> {
+pub struct LazyParseIter<'a, Parser> {
     template: &'a str,
     parser: &'a Parser,
 }
 
-impl<'a, Parser> Clone for SegmentResultIter<'a, Parser> {
+impl<'a, Parser> Clone for LazyParseIter<'a, Parser> {
     fn clone(&self) -> Self {
         *self
     }
 }
 
-impl<'a, Parser> Copy for SegmentResultIter<'a, Parser> {}
+impl<'a, Parser> Copy for LazyParseIter<'a, Parser> {}
 
-impl<'a, Parser> SegmentResultIter<'a, Parser> {
+impl<'a, Parser> LazyParseIter<'a, Parser> {
     pub(crate) fn new(template: &'a str, parser: &'a Parser) -> Self {
         Self { template, parser }
     }
 }
 
-impl<'a, Parser> Iterator for SegmentResultIter<'a, Parser>
+impl<'a, Parser> Iterator for LazyParseIter<'a, Parser>
 where
     Parser: Parse<'a>,
 {
@@ -41,11 +41,11 @@ where
     }
 }
 
-impl<'a, Parser> IntoIterator for &'a SegmentResultIter<'a, Parser>
+impl<'a, Parser> IntoIterator for &'a LazyParseIter<'a, Parser>
 where
     Parser: Parse<'a>,
 {
-    type IntoIter = SegmentResultIter<'a, Parser>;
+    type IntoIter = LazyParseIter<'a, Parser>;
     type Item = Result<Parser::Output, Parser::Error>;
     fn into_iter(self) -> Self::IntoIter {
         *self
