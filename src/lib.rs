@@ -93,3 +93,8 @@ pub use render::*;
 pub use shorthands::*;
 pub use system::*;
 pub use template::*;
+
+#[cfg(feature = "std")]
+#[doc = include_str!("../README.md")]
+#[allow(unused)]
+mod test_readme_code_snippets {}
