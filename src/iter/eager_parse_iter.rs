@@ -16,6 +16,10 @@ where
     fn next(&mut self) -> Option<Self::Item> {
         self.0.next().as_deref().copied().map(Ok)
     }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.0.size_hint()
+    }
 }
 
 #[derive(Debug, Clone, Copy, IntoIterator)]
