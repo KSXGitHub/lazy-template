@@ -29,8 +29,6 @@ jobs:
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
-        with:
-          components: clippy, rustfmt
 
       - name: Install just
         uses: taiki-e/install-action@just
