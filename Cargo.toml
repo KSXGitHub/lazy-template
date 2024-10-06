@@ -1,7 +1,32 @@
 [package]
 name = "lazy-template"
+description = "String template library that send queries to function responder and interpolate the responses"
 version = "0.0.0"
+repository = "https://github.com/KSXGitHub/lazy-template.git"
+documentation = "https://docs.rs/lazy-template"
+authors = ["khai96_ <hvksmr1996@gmail.com>"]
+license = "MIT"
+license-file = "LICENSE.md"
+readme = "README.md"
+keywords = [
+  "template",
+  "string",
+  "interpolation",
+  "lazy",
+]
+categories = [
+  "no-std",
+  "template-engine",
+  "parsing",
+  "parser-implementations",
+]
 edition = "2021"
+include = [
+  "/src",
+  "/Cargo.toml",
+  "/LICENSE.md",
+  "/LICENSE.md",
+]
 
 [features]
 default = ["std"]
