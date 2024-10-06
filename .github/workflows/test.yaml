@@ -1,0 +1,42 @@
+name: Test
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  test:
+    name: Test
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache
+        uses: actions/cache@v3
+        timeout-minutes: 1
+        continue-on-error: true
+        with:
+          path: |
+            ~/.cargo
+            target
+          key: ${{ github.job }}-${{ runner.os }}-${{ hashFiles('rust-toolchain') }}-${{ hashFiles('Cargo.lock') }}
+          restore-keys: |
+            ${{ github.job }}-${{ runner.os }}-${{ hashFiles('rust-toolchain') }}-${{ hashFiles('Cargo.lock') }}
+            ${{ github.job }}-${{ runner.os }}-${{ hashFiles('rust-toolchain') }}-
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - name: Install just
+        uses: taiki-e/install-action@just
+
+      - name: Test
+        env:
+          RUSTFLAGS: '-D warnings'
+          RUSTDOCFLAGS: '-D warnings'
+        run: just all
