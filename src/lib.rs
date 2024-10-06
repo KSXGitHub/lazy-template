@@ -1,3 +1,69 @@
+//! **Lazily parse template:**
+//!
+//! ```
+//! # #[cfg(not(feature = "std"))] fn main() {}
+//! # #[cfg(feature = "std")] fn main() {
+//! # use pretty_assertions::assert_eq;
+//! let system = lazy_template::simple_curly_braces();
+//! let template = system.lazy_parse("{name} is a {age} years old {gender}");
+//! let alice_info = template
+//!     .to_string(|query| match query {
+//!         "name" => Ok("Alice"),
+//!         "age" => Ok("20"),
+//!         "gender" => Ok("girl"),
+//!         _ => Err(format!("Can't answer {query}")),
+//!     })
+//!     .unwrap();
+//! let bob_info = template
+//!     .to_string(|query| match query {
+//!         "name" => Ok("Bob"),
+//!         "age" => Ok("32"),
+//!         "gender" => Ok("man"),
+//!         _ => Err(format!("Can't answer {query}")),
+//!     })
+//!     .unwrap();
+//! assert_eq!(alice_info, "Alice is a 20 years old girl");
+//! assert_eq!(bob_info, "Bob is a 32 years old man");
+//! # }
+//! ```
+//!
+//! _see more:_ [`lazy_parse`](crate::TemplateSystem::lazy_parse)
+//!
+//! **Eagerly parse template:**
+//!
+//! ```
+//! # #[cfg(not(feature = "std"))] fn main() {}
+//! # #[cfg(feature = "std")] fn main() {
+//! # use pretty_assertions::assert_eq;
+//! let system = lazy_template::simple_curly_braces();
+//! let parsed_template = system
+//!     .eager_parse::<Vec<_>>("{name} is a {age} years old {gender}")
+//!     .unwrap();
+//! let alice_info = parsed_template
+//!     .to_template()
+//!     .to_string(|query| match query {
+//!         "name" => Ok("Alice"),
+//!         "age" => Ok("20"),
+//!         "gender" => Ok("girl"),
+//!         _ => Err(format!("Can't answer {query}")),
+//!     })
+//!     .unwrap();
+//! let bob_info = parsed_template
+//!     .to_template()
+//!     .to_string(|query| match query {
+//!         "name" => Ok("Bob"),
+//!         "age" => Ok("32"),
+//!         "gender" => Ok("man"),
+//!         _ => Err(format!("Can't answer {query}")),
+//!     })
+//!     .unwrap();
+//! assert_eq!(alice_info, "Alice is a 20 years old girl");
+//! assert_eq!(bob_info, "Bob is a 32 years old man");
+//! # }
+//! ```
+//!
+//! _see more:_ [`eager_parse`](crate::TemplateSystem::eager_parse)
+//!
 #![cfg_attr(not(feature = "std"), no_std)]
 
 pub mod iter;
