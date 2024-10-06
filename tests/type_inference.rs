@@ -7,4 +7,14 @@ fn infer_type_of_query_param_of_closure() {
         let _ = query.to_string();
         Ok::<_, ()>(0)
     });
+    let _ = || {
+        simple_curly_braces()
+            .eager_parse::<Vec<_>>("")
+            .unwrap()
+            .to_template()
+            .to_string(|query| {
+                let _ = query.to_string();
+                Ok::<_, ()>(0)
+            })
+    };
 }
