@@ -6,7 +6,7 @@ Imagine that you need to interpolate strings, but the template variables are not
 
 Instead of requiring a complete set of inputs (such as via a `struct`, a `HashMap`, or a JSON object) to be available, the templates from this crate would send queries (which would usually be the names of the variables) to a function (called "responder") to get the value of each query.
 
-While this library provides a preset parser for a preset template syntax (called `curly_braces`) that works out-of-the-box, it is also flexible enough to the advanced users to provide their own component parsers or even a whole new template parser.
+While this library provides a preset parser for a preset template syntax (called `curly_braces`) that works out-of-the-box, it is also flexible enough to allow advanced users to provide their own component parsers or even a whole new template parser.
 
 ## Documentation
 
