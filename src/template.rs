@@ -1,10 +1,11 @@
 use crate::Render;
 use core::{convert::Infallible, fmt, marker::PhantomData};
-use derive_more::{Display, Error};
+use derive_more::{Display, Error, IntoIterator};
 use pipe_trait::Pipe;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, IntoIterator)]
 pub struct Template<SegmentResultIntoIter, Query> {
+    #[into_iterator]
     iter: SegmentResultIntoIter,
     _query: PhantomData<Query>, // phantom Query is necessary to enable type inference later on
 }
