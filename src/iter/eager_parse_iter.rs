@@ -53,6 +53,10 @@ where
     pub fn iter(
         &'a self,
     ) -> EagerParseIter<<&'a SegmentContainer::Target as IntoIterator>::IntoIter> {
-        EagerParseIter(self.container.into_iter())
+        EagerParseIter(self.segments())
+    }
+
+    pub fn segments(&'a self) -> <&'a SegmentContainer::Target as IntoIterator>::IntoIter {
+        self.container.into_iter()
     }
 }
