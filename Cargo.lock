@@ -37,7 +37,7 @@ dependencies = [
  "pipe-trait",
  "pretty_assertions",
  "semver",
- "split-first-char",
+ "split-char-from-str",
 ]
 
 [[package]]
@@ -81,10 +81,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "61697e0a1c7e512e84a621326239844a24d8207b4669b41bc18b32ea5cbf988b"
 
 [[package]]
-name = "split-first-char"
+name = "split-char-from-str"
 version = "0.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "87ce492fd669c5b32b3e629c0b35278c51d4fae83176e248c9dea71f39c86e58"
+checksum = "7736b73d12e0e2179ce3903b2599a3f33f195090eccf0326161e9013beae4fb7"
 
 [[package]]
 name = "syn"

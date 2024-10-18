@@ -1,7 +1,7 @@
 use super::{ComponentParserInput, ParserConfig, Segment};
 use crate::{IntoSkipOrFatal, Parse};
 use derive_more::{Display, Error};
-use split_first_char::split_first_char;
+use split_char_from_str::SplitCharFromStr;
 
 /// Parse a template string whose queries are placed between an opening bracket character and a closing bracket character,
 /// (such as [curly braces](crate::simple_curly_braces)).
@@ -146,7 +146,9 @@ where
             return Ok((Segment::Expression(query), rest));
         }
 
-        let (head, tail) = split_first_char(input).ok_or(ParseError::UnexpectedEndOfInput)?;
+        let (head, tail) = input
+            .split_first_char()
+            .ok_or(ParseError::UnexpectedEndOfInput)?;
 
         if head == self.config.close_bracket {
             return Err(ParseError::UnexpectedChar(head));
