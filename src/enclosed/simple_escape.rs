@@ -33,7 +33,8 @@ impl<'a> Parse<'a, ParserInput<'a>> for Parser {
 
         let (escape_code, rest) = tail
             .split_first_char()
-            .ok_or(Some(ParseError::UnexpectedEndOfInput))?;
+            .ok_or(ParseError::UnexpectedEndOfInput)
+            .map_err(Some)?;
 
         let char = escape_bracket(escape_code, input.config)
             .or_else(|| make_special_character(escape_code))
