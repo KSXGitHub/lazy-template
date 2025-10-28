@@ -105,9 +105,9 @@ pub enum ParseError<ParseEscapeError, ParseQueryError> {
     UnexpectedChar(#[error(not(source))] char),
     #[display("Unexpected end of input")]
     UnexpectedEndOfInput,
-    #[display("Fail to escape: {_0}")]
+    #[display("Failed to escape: {_0}")]
     ParseEscape(ParseEscapeError),
-    #[display("Fail to parse query: {_0}")]
+    #[display("Failed to parse query: {_0}")]
     ParseQuery(ParseQueryError),
 }
 

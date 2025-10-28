@@ -56,7 +56,7 @@ fn reject_invalid_escapes() {
         .to_string(map)
         .unwrap_err();
     dbg!(&error);
-    let expected_message = "Fail to escape: Unsupported escape code 'a'";
+    let expected_message = "Failed to escape: Unsupported escape code 'a'";
     assert_eq!(error.to_string(), expected_message);
     assert!(matches!(
         error,
@@ -81,7 +81,7 @@ fn reject_unexpected_end_of_input() {
         .to_string(map)
         .unwrap_err();
     dbg!(&error);
-    let expected_message = "Fail to escape: Unexpected end of input";
+    let expected_message = "Failed to escape: Unexpected end of input";
     assert_eq!(error.to_string(), expected_message);
     assert!(matches!(
         error,

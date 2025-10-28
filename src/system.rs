@@ -65,7 +65,7 @@ where
     ///     .unwrap_err();
     /// # assert_eq!(
     /// #     error.to_string(),
-    /// #     "Fail to parse query: Unexpected token '}'"
+    /// #     "Failed to parse query: Unexpected token '}'"
     /// # );
     /// assert_eq!(output, "Alice is a 20 years "); // output is partially written
     /// # }
@@ -109,7 +109,7 @@ where
     ///     .unwrap_err();
     /// # assert_eq!(
     /// #     error.to_string(),
-    /// #     "Fail to parse query: Unexpected end of input",
+    /// #     "Failed to parse query: Unexpected end of input",
     /// # );
     /// # }
     /// ```
