@@ -33,6 +33,10 @@ include = [
 default = ["std"]
 std = []
 
+[[example]]
+name = "println"
+required-features = ["std"]
+
 [dependencies]
 derive_more = { version = "2.0.1", default-features = false, features = ["display", "error", "into_iterator"] }
 pipe-trait = "0.4.0"
@@ -41,3 +45,4 @@ split-char-from-str = "0.0.0"
 [dev-dependencies]
 pretty_assertions = "1.4.1"
 semver = "1.0.27"
+text-block-macros = "0.2.0"
