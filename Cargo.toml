@@ -40,4 +40,4 @@ split-char-from-str = "0.0.0"
 
 [dev-dependencies]
 pretty_assertions = "1.4.1"
-semver = "1.0.23"
+semver = "1.0.27"
