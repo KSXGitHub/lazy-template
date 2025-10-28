@@ -40,7 +40,7 @@ where
     where
         Output: fmt::Write,
         SegmentResultIntoIter::Item: Into<Result<Segment, ParseError>>,
-        RenderOutput: Display,
+        RenderOutput: fmt::Display,
         Segment: Render<Respond, RenderOutput, QueryError>,
         Respond: FnMut(Query) -> Result<QueryOutput, QueryError>,
     {
