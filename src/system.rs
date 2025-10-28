@@ -45,7 +45,7 @@ where
     /// # }
     /// ```
     ///
-    /// [`Template`] only parses each segment just before it is needed, meaning that even a template with syntax error
+    /// [`Template`] only parses each segment just before it is needed, meaning that even a template with syntax errors
     /// can produce a partial output:
     ///
     /// ```
