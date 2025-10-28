@@ -78,11 +78,11 @@ impl Parser<(), ()> {
     ///     .with_escape_parser(SimpleEscapeParser)
     ///     .with_query_parser(SimpleQueryParser)
     ///     .into_template_system::<SimpleQuery>()
-    ///     .lazy_parse("{name} is a {age} years old {gender}")
+    ///     .lazy_parse("{name} is a {age} years old {descriptor}")
     ///     .to_string(|query| match query {
     ///         "name" => Ok("Alice"),
     ///         "age" => Ok("20"),
-    ///         "gender" => Ok("girl"),
+    ///         "descriptor" => Ok("girl"),
     ///         _ => Err(format!("Can't answer {query:?}")),
     ///     })
     ///     .unwrap();

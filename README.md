@@ -18,12 +18,12 @@ This is the most basic usage. There are more in the [documentation][docs].
 
 ```rust
 let system = lazy_template::simple_curly_braces();
-let template = system.lazy_parse("{name} is a {age} years old {gender}");
+let template = system.lazy_parse("{name} is a {age} years old {descriptor}");
 let output = template
     .to_string(|query| match query {
         "name" => Ok("Alice"),
         "age" => Ok("20"),
-        "gender" => Ok("girl"),
+        "descriptor" => Ok("girl"),
         _ => Err(format!("Can't answer {query}")),
     })
     .unwrap();

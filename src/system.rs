@@ -32,12 +32,12 @@ where
     /// # use pretty_assertions::assert_eq;
     /// use lazy_template::{Template, simple_curly_braces};
     /// let system = simple_curly_braces();
-    /// let template: Template<_, _> = system.lazy_parse("{name} is a {age} years old {gender}");
+    /// let template: Template<_, _> = system.lazy_parse("{name} is a {age} years old {descriptor}");
     /// let output = template
     ///     .to_string(|query| match query {
     ///         "name" => Ok("Alice"),
     ///         "age" => Ok("20"),
-    ///         "gender" => Ok("girl"),
+    ///         "descriptor" => Ok("girl"),
     ///         _ => Err(format!("Can't answer {query:?}")),
     ///     })
     ///     .unwrap();
@@ -52,14 +52,14 @@ where
     /// # #[cfg(not(feature = "std"))] fn main() {}
     /// # #[cfg(feature = "std")] fn main() {
     /// # use pretty_assertions::assert_eq;
-    /// let template_string = "{name} is a {age} years } old {gender})"; // incorrectly placed closing curly bracket
+    /// let template_string = "{name} is a {age} years } old {descriptor})"; // incorrectly placed closing curly bracket
     /// let mut output = String::new();
     /// let error = lazy_template::simple_curly_braces()
     ///     .lazy_parse(template_string)
     ///     .write_to(&mut output, |query| match query {
     ///         "name" => Ok("Alice"),
     ///         "age" => Ok("20"),
-    ///         "gender" => Ok("girl"),
+    ///         "descriptor" => Ok("girl"),
     ///         _ => Err(format!("Can't answer {query:?}")),
     ///     })
     ///     .unwrap_err();

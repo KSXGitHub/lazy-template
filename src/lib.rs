@@ -14,12 +14,12 @@
 //! # #[cfg(feature = "std")] fn main() {
 //! # use pretty_assertions::assert_eq;
 //! let system = lazy_template::simple_curly_braces();
-//! let template = system.lazy_parse("{name} is a {age} years old {gender}");
+//! let template = system.lazy_parse("{name} is a {age} years old {descriptor}");
 //! let alice_info = template
 //!     .to_string(|query| match query {
 //!         "name" => Ok("Alice"),
 //!         "age" => Ok("20"),
-//!         "gender" => Ok("girl"),
+//!         "descriptor" => Ok("girl"),
 //!         _ => Err(format!("Can't answer {query}")),
 //!     })
 //!     .unwrap();
@@ -27,7 +27,7 @@
 //!     .to_string(|query| match query {
 //!         "name" => Ok("Bob"),
 //!         "age" => Ok("32"),
-//!         "gender" => Ok("man"),
+//!         "descriptor" => Ok("man"),
 //!         _ => Err(format!("Can't answer {query}")),
 //!     })
 //!     .unwrap();
@@ -46,14 +46,14 @@
 //! # use pretty_assertions::assert_eq;
 //! let system = lazy_template::simple_curly_braces();
 //! let parsed_template = system
-//!     .eager_parse::<Vec<_>>("{name} is a {age} years old {gender}")
+//!     .eager_parse::<Vec<_>>("{name} is a {age} years old {descriptor}")
 //!     .unwrap();
 //! let alice_info = parsed_template
 //!     .to_template()
 //!     .to_string(|query| match query {
 //!         "name" => Ok("Alice"),
 //!         "age" => Ok("20"),
-//!         "gender" => Ok("girl"),
+//!         "descriptor" => Ok("girl"),
 //!         _ => Err(format!("Can't answer {query}")),
 //!     })
 //!     .unwrap();
@@ -62,7 +62,7 @@
 //!     .to_string(|query| match query {
 //!         "name" => Ok("Bob"),
 //!         "age" => Ok("32"),
-//!         "gender" => Ok("man"),
+//!         "descriptor" => Ok("man"),
 //!         _ => Err(format!("Can't answer {query}")),
 //!     })
 //!     .unwrap();
