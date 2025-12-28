@@ -49,7 +49,7 @@ use core::{convert::Infallible, fmt};
 /// assert_eq!(actual, expected);
 /// # }
 /// ```
-pub fn simple_curly_braces<'a>() -> SimpleCurlyBraces<'a> {
+pub fn simple_curly_braces() -> SimpleCurlyBraces {
     enclosed::Parser::curly_braces()
         .with_escape_parser(SimpleEscapeParser)
         .with_query_parser(SimpleQueryParser)
@@ -57,7 +57,7 @@ pub fn simple_curly_braces<'a>() -> SimpleCurlyBraces<'a> {
 }
 
 /// Return type of [`simple_curly_braces`].
-pub type SimpleCurlyBraces<'a> = SimpleEnclosedTemplateSystem<'a>;
+pub type SimpleCurlyBraces = SimpleEnclosedTemplateSystem<'static>;
 
 /// Return type of [`SimpleCurlyBraces::lazy_parse`].
 pub type LazilyParsed<'a, Query> = Template<
@@ -117,7 +117,7 @@ mod std_tests {
             #[derive(Debug, Display, Error, Clone, Copy)]
             enum QueryError {}
 
-            let system: SimpleCurlyBraces<'static> = simple_curly_braces();
+            let system: SimpleCurlyBraces = simple_curly_braces();
 
             let lazy_parsed_template: LazilyParsed<'_, _> = system.lazy_parse("");
             let lazy_result: Result<String, LazilyParsedApplicationError<QueryError>> =
