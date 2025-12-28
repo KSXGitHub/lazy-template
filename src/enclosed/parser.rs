@@ -4,7 +4,7 @@ use derive_more::{Display, Error};
 use split_char_from_str::SplitCharFromStr;
 
 /// Parse a template string whose queries are placed between an opening bracket character and a closing bracket character,
-/// (such as [curly braces](crate::simple_curly_braces)).
+/// (such as [curly braces](crate::simple_curly_braces())).
 #[derive(Debug, Clone, Copy)]
 pub struct EnclosedTemplateParser<EscapeParser, QueryParser> {
     pub config: ParserConfig,
