@@ -113,7 +113,7 @@ mod std_tests {
 
     #[test]
     fn using_type_aliases() {
-        fn _type_check() {
+        fn _type_check(short_lived_response: &str) {
             #[derive(Debug, Display, Error, Clone, Copy)]
             enum QueryError {}
 
@@ -121,7 +121,7 @@ mod std_tests {
 
             let lazy_parsed_template: LazilyParsed<'_, _> = system.lazy_parse("");
             let lazy_result: Result<String, LazilyParsedApplicationError<QueryError>> =
-                lazy_parsed_template.to_string(|_| Ok::<_, QueryError>(""));
+                lazy_parsed_template.to_string(|_| Ok::<_, QueryError>(short_lived_response));
             drop(lazy_result);
 
             let eager_parsed_template: Result<
@@ -131,7 +131,7 @@ mod std_tests {
             let eager_parsed_template: EagerlyParsedTemplate<_, &str> =
                 eager_parsed_template.as_ref().unwrap().to_template();
             let eager_result: Result<String, EagerlyParsedApplicationError<QueryError>> =
-                eager_parsed_template.to_string(|_| Ok::<_, QueryError>(""));
+                eager_parsed_template.to_string(|_| Ok::<_, QueryError>(short_lived_response));
             drop(eager_result);
         }
     }
